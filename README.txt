@@ -10,16 +10,9 @@
     b. students.csv
     c. README.txt
 
-3. Other comments
-    project requires students.csv file to run
-    program should immediately start by showing menu 
-    input a valid menu option to alter/view data
-    quit the application by inputting 6 during the menu application
+3. Extra comments
 
-
-    issues:
-    the way it is programmed, you can input empty fields. I couldn't think of a way to prevent this cleanly without absolutely flooding the code with the same check 
-    so I just didn't account for it
-
-    The inputs with strings are not validated as I couldn't think of a logical way to do so 
-    
+- searching students allows for using any combination of the queries. You can omit the ones you don't want by typing N/A for that query when prompted
+- input validation for states, non 5 digit zipcodes, names, valid addresses, phone numbers not implemented as I couldn't figure out how
+- on import, random advisors are applied to each student and appear when selecting option 1, but the changes do not actually show up in the database for some reason
+- as with the input validation, forgot to add case when nothing is inputted. Kinda forgot and at this point am too lazy to add

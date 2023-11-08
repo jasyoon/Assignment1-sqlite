@@ -1,11 +1,11 @@
 import csv
 import sqlite3
 
-conn = sqlite3.connect('/Users/jyoon/Documents/CPSC 408/Assignment1.db')
+conn = sqlite3.connect('./Assignment1.db')
 mycursor = conn.cursor()
 
 def import_data():
-    with open('/Users/jyoon/Documents/CPSC 408/students.csv', newline='') as csvfile:
+    with open('./students.csv', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         mycursor.execute(f'CREATE TABLE IF NOT EXISTS Student(StudentId INTEGER PRIMARY KEY,'
                             'FirstName TEXT,'
@@ -20,11 +20,22 @@ def import_data():
                             'MobilePhoneNumber TEXT,'
                             'isDeleted INTEGER DEFAULT 0);')
 
-        for column in reader:
-            values = (column['FirstName'], column['LastName'], column['GPA'], column['Major'], column['Address'], column['City'], column['State'], column['ZipCode'], column['MobilePhoneNumber'])
-            mycursor.execute(f'INSERT INTO Student(FirstName, LastName, GPA, Major, Address, City, State, ZipCode, MobilePhoneNumber) VALUES(?,?,?,?,?,?,?,?,?)', values)
 
-            conn.commit()
+        advisors = ['Alpha', 'Beta', 'Sigma', 'Delta', 'Epsilon']
+        advisor_count = 0
+
+        for column in reader:
+            if 'FacultyAdvisor' in column and column['FacultyAdvisor']:
+                faculty_advisor = column['FacultyAdvisor']
+            else:
+                faculty_advisor = advisors[advisor_count % 5]
+                advisor_count += 1
+
+            values = (column['FirstName'], column['LastName'], column['GPA'], column['Major'], faculty_advisor, column['Address'], column['City'], column['State'], column['ZipCode'], column['MobilePhoneNumber'])
+            mycursor.execute(f'INSERT INTO Student(FirstName, LastName, GPA, Major, FacultyAdvisor, Address, City, State, ZipCode, MobilePhoneNumber) VALUES(?,?,?,?,?,?,?,?,?,?)', values)
+
+
+        conn.commit()
 
 def display_all_students():
     mycursor.execute(f'SELECT * FROM Student')
@@ -107,7 +118,7 @@ def choice_two():
     lname = input("Enter last name: ")
     gpa = input("Enter GPA: ")
     try:
-        gpa = float(gpa)  # Validate GPA as a float
+        gpa = float(gpa)
     except ValueError:
         print("Invalid GPA. Please enter a valid numeric value for GPA.")
         return
@@ -150,7 +161,7 @@ def choice_five():
     major = input("Enter major (or 'N/A' to skip): ")
     gpa = input("Enter GPA (or 'N/A' to skip): ")
     try:
-        gpa = float(gpa)  # Validate GPA as a float
+        gpa = float(gpa)
     except ValueError:
         print("Invalid GPA. Please enter a valid numeric value for GPA.")
         return
@@ -189,7 +200,6 @@ def menu():
 
 
 import_data()
-
 menu()
 mycursor.close()
 
